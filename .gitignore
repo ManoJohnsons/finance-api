@@ -81,3 +81,7 @@ replay_pid*
 
 # Windows
 Thumbs.db
+
+### Some files to ignore
+# Ignore local environment variables files
+.env

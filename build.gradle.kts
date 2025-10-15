@@ -53,6 +53,10 @@ dependencies {
 
 	// Spring Boot Starter Email
 	implementation("org.springframework.boot:spring-boot-starter-mail")
+
+	// Testcontainers
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:postgresql")
 }
 
 tasks.withType<Test> {

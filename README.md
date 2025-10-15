@@ -127,14 +127,26 @@ Para executar este projeto localmente, siga os passos abaixo.
     cd finance-api
     ```
 
-2. **Inicie o ambiente Docker:**
-    Este comando irá subir o container do PostgreSQL, conforme definido no arquivo `docker-compose.yml`.
+2. **Configure as variáveis de ambiente:**  
+
+    Copie o arquivo de exemplo `.env.example` para um novo arquivo chamado `.env`.
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Em seguida, abra o arquivo `.env` e, se desejar, altere os valores, principalmente a senha `DB_PASSWORD`.
+
+3. **Inicie o ambiente Docker:**  
+
+    Este comando irá ler seu arquivo `.env` e subir o container do PostgreSQL, conforme definido no arquivo `docker-compose.yml`.
 
     ```bash
     docker-compose up -d
     ```
 
-3. **Execute a aplicação:**
+4. **Execute a aplicação:**  
+
     O projeto utiliza o Gradle Wrapper, então você não precisa ter o Gradle instalado na sua máquina.
 
     ```bash
@@ -145,7 +157,7 @@ Para executar este projeto localmente, siga os passos abaixo.
     .\gradlew.bat bootRun
     ```
 
-4. A API estará disponível em `http://localhost:8080`.
+5. A API estará disponível em `http://localhost:8080`.
 
 ## 📚 Documentação da API
 
