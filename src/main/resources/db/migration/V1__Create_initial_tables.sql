@@ -17,7 +17,7 @@ CREATE TABLE tab_categories (
     monthly_goal DECIMAL(19, 2),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     user_id BIGINT NOT NULL,
-    CONSTRAINT fk_categories_users FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_categories_users FOREIGN KEY (user_id) REFERENCES tab_users(id)
 );
 
 -- Transaction table
@@ -29,6 +29,6 @@ CREATE TABLE tab_transactions (
     type VARCHAR(7) NOT NULL CHECK (type IN ('INCOME', 'EXPENSE')),
     user_id BIGINT NOT NULL,
     category_id BIGINT, -- Allows null values, as specified in ER Diagram
-    CONSTRAINT fk_transactions_users FOREIGN KEY (user_id) REFERENCES users(id),
-    CONSTRAINT fk_transactions_categories FOREIGN KEY (category_id) REFERENCES categories(id)
+    CONSTRAINT fk_transactions_users FOREIGN KEY (user_id) REFERENCES tab_users(id),
+    CONSTRAINT fk_transactions_categories FOREIGN KEY (category_id) REFERENCES tab_categories(id)
 );
