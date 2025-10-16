@@ -1,0 +1,26 @@
+{
+    "properties": [
+        {
+            "name": "api.security.token.secret",
+            "type": "java.lang.String",
+            "description": "Secret key for signing JWT tokens."
+        },
+        {
+            "name": "api.security.token.expiration-hours",
+            "type": "java.lang.Long",
+            "description": "JWT token expiration time in hours.",
+            "defaultValue": 2
+        },
+        {
+            "name": "api.security.token.issuer",
+            "type": "java.lang.String",
+            "description": "Issuer's name of the JWT token."
+        },
+        {
+            "name": "api.security.token.zone-offset",
+            "type": "java.lang.String",
+            "description": "The time zone reference to use to calculate the expiration time.",
+            "defaultValue": "+00:00"
+        }
+    ]
+}
