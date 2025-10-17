@@ -52,4 +52,8 @@ public class Transaction {
         this.user = user;
         this.category = category;
     }
+
+    public void disassociateCategory() {
+        this.category = null;
+    }
 }
