@@ -1,5 +1,7 @@
 package io.github.manojohnsons.financeapi.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,22 @@ public class TransactionService {
         return TransactionResponseDTO.fromEntity(savedTransaction);
     }
 
+    @Transactional(readOnly = true)
+    public List<TransactionResponseDTO> findAllByUserIdAndDate(Long userId, int year, int month) {
+        var transactions = transactionRepository.findByUserIdAndYearAndMonth(userId, year, month);
+
+        return transactions.stream()
+                .map(TransactionResponseDTO::fromEntity)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public TransactionResponseDTO findById(Long transactionId, Long userId) {
+        var transaction = findTransactionByIdAndUser(transactionId, userId);
+
+        return TransactionResponseDTO.fromEntity(transaction);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource User not found."));
@@ -51,5 +69,10 @@ public class TransactionService {
 
         return categoryRepository.findByIdAndUserId(categoryId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource Category not found."));
+    }
+
+    private Transaction findTransactionByIdAndUser(Long transactionId, Long userId) {
+        return transactionRepository.findByIdAndUserId(transactionId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Resource Transaction not found."));
     }
 }
