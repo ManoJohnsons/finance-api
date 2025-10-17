@@ -56,4 +56,8 @@ public class Transaction {
     public void disassociateCategory() {
         this.category = null;
     }
+
+    public void changeCategory(Category newCategory) {
+        this.category = newCategory;
+    }
 }

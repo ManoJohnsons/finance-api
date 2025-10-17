@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.github.manojohnsons.financeapi.application.dto.TransactionRequestDTO;
 import io.github.manojohnsons.financeapi.application.dto.TransactionResponseDTO;
+import io.github.manojohnsons.financeapi.application.dto.TransactionUpdateRequestDTO;
 import io.github.manojohnsons.financeapi.domain.model.Category;
 import io.github.manojohnsons.financeapi.domain.model.Transaction;
 import io.github.manojohnsons.financeapi.domain.model.User;
@@ -54,6 +55,19 @@ public class TransactionService {
     @Transactional(readOnly = true)
     public TransactionResponseDTO findById(Long transactionId, Long userId) {
         var transaction = findTransactionByIdAndUser(transactionId, userId);
+
+        return TransactionResponseDTO.fromEntity(transaction);
+    }
+
+    @Transactional
+    public TransactionResponseDTO update(Long transactionId, TransactionUpdateRequestDTO dto, Long userId) {
+        var transaction = findTransactionByIdAndUser(transactionId, userId);
+        var category = findCategoryIfPresent(dto.categoryId(), userId);
+
+        transaction.setDescription(dto.description());
+        transaction.setAmount(dto.amount());
+        transaction.setDate(dto.date());
+        transaction.changeCategory(category);
 
         return TransactionResponseDTO.fromEntity(transaction);
     }

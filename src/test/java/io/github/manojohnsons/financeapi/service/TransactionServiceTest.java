@@ -20,6 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import io.github.manojohnsons.financeapi.application.dto.TransactionRequestDTO;
 import io.github.manojohnsons.financeapi.application.dto.TransactionResponseDTO;
+import io.github.manojohnsons.financeapi.application.dto.TransactionUpdateRequestDTO;
 import io.github.manojohnsons.financeapi.domain.enums.TransactionType;
 import io.github.manojohnsons.financeapi.domain.model.Category;
 import io.github.manojohnsons.financeapi.domain.model.Transaction;
@@ -136,6 +137,42 @@ public class TransactionServiceTest {
     }
 
     @Test
+    @DisplayName("Should update a transaction successfully")
+    void shouldUpdateTransactionSuccessfully() {
+        // Arrange (Organizar)
+        var userId = 10L;
+        var transactionId = 1L;
+        var user = new User();
+
+        var requestDTO = new TransactionUpdateRequestDTO(
+            "Jantar de negócios", 
+            new BigDecimal("150.75"), 
+            LocalDate.of(2025, 10, 17), 
+            null);
+
+        var originalTransaction = new Transaction(
+            "Almoço", 
+            new BigDecimal("50.00"), 
+            LocalDate.of(2025, 10, 16), 
+            TransactionType.EXPENSE, 
+            user, 
+            null);
+        ReflectionTestUtils.setField(originalTransaction, "id", transactionId);
+
+        when(transactionRepository.findByIdAndUserId(transactionId, userId)).thenReturn(Optional.of(originalTransaction));
+
+        // Act (Agir)
+        TransactionResponseDTO response = transactionService.update(transactionId, requestDTO, userId);
+
+        // Assert (Verificar)
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(transactionId);
+        assertThat(response.description()).isEqualTo("Jantar de negócios");
+        assertThat(response.amount()).isEqualTo(new BigDecimal("150.75"));
+        assertThat(response.date()).isEqualTo(LocalDate.of(2025, 10, 17));
+    }
+
+    @Test
     @DisplayName("Should throw ResourceNotFoundException when trying to create a transaction for a non-existent user")
     void shouldThrowResourceNotFoundExceptionWhenCreatingTransactionForNonExistingUser() {
         // Arrange (Organizar)
@@ -224,6 +261,44 @@ public class TransactionServiceTest {
         // Act & Assert (Agir e Verificar)
         var exception = assertThrows(ResourceNotFoundException.class, () -> {
             transactionService.findById(transactionId, attackerUserId);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("Resource Transaction not found.");
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceNotFoundException when trying to update a non-existing transaction") 
+    void shouldThrowResourceNotFoundExceptionWhenUpdatingNonExistingTransaction() {
+        // Arrange (Organizar)
+        var nonExistingTransactionId = 999L;
+        var userId = 10L;
+        var requestDTO = new TransactionUpdateRequestDTO("Qualquer coisa", BigDecimal.ONE, LocalDate.now(), null);
+
+        when(transactionRepository.findByIdAndUserId(nonExistingTransactionId, userId)).thenReturn(Optional.empty());
+
+        // Act & Assert (Agir e Verificar)
+        var exception = assertThrows(ResourceNotFoundException.class, () -> {
+            transactionService.update(nonExistingTransactionId, requestDTO, userId);
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("Resource Transaction not found.");
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceNotFoundException when trying to update a transaction of another user")
+    void shouldThrowResourceNotFoundExceptionWhenUpdatingTransactionOfAnotherUser() {
+        // Arrange (Organizar)
+        var transactionId = 5L;
+        @SuppressWarnings("unused")
+        var ownerUserId = 20L;
+        var attackerUserId = 10L;
+        var requestDTO = new TransactionUpdateRequestDTO("Hacked", BigDecimal.TEN, LocalDate.now(), null);
+
+        when(transactionRepository.findByIdAndUserId(transactionId, attackerUserId)).thenReturn(Optional.empty());
+
+        // Act & Assert (Agir e Verificar)
+        var exception = assertThrows(ResourceNotFoundException.class, () -> {
+            transactionService.update(transactionId, requestDTO, attackerUserId);
         });
 
         assertThat(exception.getMessage()).isEqualTo("Resource Transaction not found.");
