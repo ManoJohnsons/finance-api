@@ -72,6 +72,13 @@ public class TransactionService {
         return TransactionResponseDTO.fromEntity(transaction);
     }
 
+    @Transactional
+    public void delete(Long transactionId, Long userId) {
+        var transaction = findTransactionByIdAndUser(transactionId, userId);
+
+        transactionRepository.delete(transaction);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource User not found."));
