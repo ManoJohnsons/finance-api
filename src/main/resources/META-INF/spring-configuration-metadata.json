@@ -26,6 +26,16 @@
             "name": "api.scheduling.monthly-summary.cron",
             "type": "java.lang.String",
             "description": "The configuration schedule for monthly summary."
+        },
+        {
+            "name": "api.email.summary.subject",
+            "type": "java.lang.String",
+            "description": "The subject of the message to be sent to the email." 
+        },
+        {
+            "name": "api.email.signature",
+            "type": "java.lang.String",
+            "description": "The signature of the message to be sent to the email."
         }
     ]
 }
