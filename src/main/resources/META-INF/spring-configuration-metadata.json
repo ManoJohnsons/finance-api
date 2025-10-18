@@ -21,6 +21,11 @@
             "type": "java.lang.String",
             "description": "The time zone reference to use to calculate the expiration time.",
             "defaultValue": "+00:00"
+        },
+        {
+            "name": "api.scheduling.monthly-summary.cron",
+            "type": "java.lang.String",
+            "description": "The configuration schedule for monthly summary."
         }
     ]
 }
